@@ -4,7 +4,7 @@ export default function UserProfile() {
   const [gender, setGender] = useState("");
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white p-6 w-full h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white p-6 w-full h-screen">
       <div className="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-lg sm:max-w-lg md:max-w-xl lg:max-w-2xl">
         <h2 className="text-2xl font-bold text-blue-400 text-center mb-4">User Profile</h2>
 

@@ -1,49 +1,113 @@
 import React, { useState } from "react";
 import UserProfile from "./UserProfile";
 import AthleteProfile from "./AthleteProfile";
-import { FaUser, FaRunning } from "react-icons/fa";
+import LoginPage from "./LoginPage";
+import { FaUser, FaRunning, FaHome } from "react-icons/fa";
+import viratImage from "./assets/1.jpg";
+import boltImage from "./assets/2.jpeg";
+import serenaImage from "./assets/3.jpg";
+import messiImage from "./assets/4.jpg";
+import phelpsImage from "./assets/5.jpg";
+import bilesImage from "./assets/6.jpg";
 
 export default function App() {
-  const [activeComponent, setActiveComponent] = useState(null);
+  const [activeComponent, setActiveComponent] = useState("home");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white p-6">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Select Your Profile</h1>
-      
-      {/* Toggle Buttons */}
-      <div className="flex space-x-4 mb-6">
-        <button
-          className={`flex items-center space-x-2 px-6 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-md ${
-            activeComponent === "user" ? "bg-blue-600" : "bg-gray-500 hover:bg-gray-600"
-          }`}
-          onClick={() => setActiveComponent("user")}
-        >
-          <FaUser className="text-lg" /> <span>User Profile</span>
-        </button>
-        
-        <button
-          className={`flex items-center space-x-2 px-6 py-3 rounded-lg text-white font-medium transition-all duration-300 shadow-md ${
-            activeComponent === "athlete" ? "bg-green-600" : "bg-gray-500 hover:bg-gray-600"
-          }`}
-          onClick={() => setActiveComponent("athlete")}
-        >
-          <FaRunning className="text-lg" /> <span>Athlete Profile</span>
-        </button>
+    <div className="bg-gray-100 min-h-screen flex">
+      <nav className="bg-gray-900 text-white p-6 w-64 fixed h-full shadow-md flex flex-col items-start">
+        <div className="flex items-center space-x-4 mb-8">
+          <span className="text-xl font-bold">Athlete Management</span>
+        </div>
+        <ul className="w-full">
+          <li className="mb-4">
+            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("home")}>
+              <FaHome /> <span>Home</span>
+            </button>
+          </li>
+          <li className="mb-4">
+            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("login")}>
+              <FaUser /> <span>Login</span>
+            </button>
+          </li>
+          <li className="mb-4">
+            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("user")}>
+              <FaUser /> <span>User Profile</span>
+            </button>
+          </li>
+          <li>
+            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("athlete")}>
+              <FaRunning /> <span>Athlete Profile</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <div className="ml-64 p-6 w-full">
+        {activeComponent === "home" && <HomePage />}
+        {activeComponent === "login" && <LoginPage />}
+        {activeComponent === "user" && <UserProfile />}
+        {activeComponent === "athlete" && <AthleteProfile />}
       </div>
+    </div>
+  );
+}
 
-      {/* Profile Component Display */}
-      <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
-        {activeComponent === "user" && (
-          <div className="animate-fade-in">
-            <UserProfile />
+export function HomePage() {
+  const athletes = [
+    {
+      name: "Virat Kohli",
+      sport: "Cricket",
+      story: "Virat Kohli's journey from a young aspiring cricketer to an international legend is a testament to hard work and perseverance. With a relentless drive for excellence, he has shattered records, led India to historic victories, and inspired a generation with his leadership and passion for the game.",
+      image: viratImage
+    },
+    {
+      name: "Usain Bolt",
+      sport: "Athletics",
+      story: "Usain Bolt, known as the fastest man on Earth, electrified the world with his incredible speed. His record-breaking performances in the 100m and 200m sprints cemented his legacy as a legend in track and field. His showmanship, dedication, and dominance redefined what it meant to be a sprinter.",
+      image: boltImage
+    },
+    {
+      name: "Serena Williams",
+      sport: "Tennis",
+      story: "Serena Williams is not just a champion but a revolutionary force in women's tennis. With 23 Grand Slam singles titles, her strength, resilience, and mental fortitude have set new standards in the sport. Off the court, she has inspired millions through her advocacy for equality and empowerment.",
+      image: serenaImage
+    },
+    {
+      name: "Lionel Messi",
+      sport: "Football",
+      story: "Lionel Messi, a magician with the ball, has dazzled fans worldwide with his extraordinary dribbling and goal-scoring abilities. Overcoming early challenges, he rose to become a global icon, winning multiple Ballon d'Or awards and leading Argentina to World Cup glory. His humility and brilliance make him a true legend.",
+      image: messiImage
+    },
+    {
+      name: "Michael Phelps",
+      sport: "Swimming",
+      story: "Michael Phelps' unparalleled dominance in swimming has made him the most decorated Olympian in history with 23 gold medals. His dedication, resilience, and commitment to excellence have redefined competitive swimming, leaving behind an inspiring legacy for future generations.",
+      image: phelpsImage
+    },
+    {
+      name: "Simone Biles",
+      sport: "Gymnastics",
+      story: "Simone Biles has revolutionized gymnastics with her incredible power, precision, and fearless execution. Her groundbreaking skills and multiple Olympic gold medals have set a new benchmark in the sport. Beyond her athletic achievements, she is a strong advocate for mental health and athlete well-being.",
+      image: bilesImage
+    }
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto mt-8 p-6">
+      {athletes.map((athlete, index) => (
+        <div key={index} className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center bg-white shadow-lg rounded-lg p-8 mb-8 transition transform hover:scale-105 duration-300 ease-in-out w-full`}>
+          <img 
+            src={athlete.image} 
+            alt={athlete.name} 
+            className="w-48 h-48 object-cover rounded-lg shadow-md" 
+          />
+          <div className="w-full p-6 space-y-1">
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">{athlete.name}</h2>
+            <h3 className="text-xl font-semibold text-blue-600 mb-4">{athlete.sport}</h3>
+            <p className="text-gray-600 text-lg leading-relaxed mb-0 w-full">{athlete.story}</p>
           </div>
-        )}
-        {activeComponent === "athlete" && (
-          <div className="animate-fade-in">
-            <AthleteProfile />
-          </div>
-        )}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
