@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import UserProfile from "./UserProfile";
 import AthleteProfile from "./AthleteProfile";
 import LoginPage from "./LoginPage";
-import { FaUser, FaRunning, FaHome } from "react-icons/fa";
+import { FaUser, FaRunning, FaHome, FaBars } from "react-icons/fa";
 import viratImage from "./assets/1.jpg";
 import boltImage from "./assets/2.jpeg";
 import serenaImage from "./assets/3.jpg";
@@ -12,41 +12,110 @@ import bilesImage from "./assets/6.jpg";
 
 export default function App() {
   const [activeComponent, setActiveComponent] = useState("home");
+  const [showMenu, setShowMenu] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const handleMenuClick = (component) => {
+    setActiveComponent(component);
+    setShowMenu(false);
+  };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex">
-      <nav className="bg-gray-900 text-white p-6 w-64 fixed h-full shadow-md flex flex-col items-start">
-        <div className="flex items-center space-x-4 mb-8">
-          <span className="text-xl font-bold">Athlete Management</span>
+    <div className={`${darkMode ? "dark" : ""}`}>
+      <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col md:flex-row text-gray-900 dark:text-white">
+
+        {/* Sidebar (Desktop) */}
+        <nav className="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 dark:from-gray-800 dark:to-gray-950 text-white p-6 w-full md:w-64 md:fixed md:h-full shadow-2xl hidden md:flex flex-col z-20">
+          <div className="text-2xl font-bold mb-10 tracking-wide border-b pb-4 border-gray-600 flex justify-between items-center">
+            🏆 Athlete Zone
+            <button onClick={() => setDarkMode(!darkMode)} className="text-xl hover:scale-110 transition">
+              {darkMode ? "🌞" : "🌙"}
+            </button>
+          </div>
+          <ul className="space-y-4 w-full">
+            {[
+              { name: "Home", icon: <FaHome />, key: "home" },
+              { name: "Login", icon: <FaUser />, key: "login" },
+              { name: "User Profile", icon: <FaUser />, key: "user" },
+              { name: "Athlete Profile", icon: <FaRunning />, key: "athlete" },
+            ].map(({ name, icon, key }) => (
+              <li key={key}>
+                <button
+                  className={`flex items-center space-x-3 p-3 w-full rounded-lg transition-all duration-300 hover:bg-gray-700 dark:hover:bg-gray-600 ${
+                    activeComponent === key ? "bg-gray-700 dark:bg-gray-600" : ""
+                  }`}
+                  onClick={() => handleMenuClick(key)}
+                >
+                  <span className="text-xl transition-transform duration-300 hover:rotate-12 hover:scale-110">
+                    {icon}
+                  </span>
+                  <span className="text-md font-medium">{name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Mobile Header */}
+        <div className="md:hidden bg-gray-900 dark:bg-gray-800 text-white p-4 flex justify-between items-center z-30">
+          <span className="text-lg font-bold flex items-center gap-2">
+            🏆 Athlete Zone
+          </span>
+          <div className="flex items-center gap-4">
+            <button onClick={() => setDarkMode(!darkMode)} className="text-xl hover:scale-110 transition">
+              {darkMode ? "🌞" : "🌙"}
+            </button>
+            <button onClick={() => setShowMenu(!showMenu)} className="text-2xl">
+              <FaBars />
+            </button>
+          </div>
         </div>
-        <ul className="w-full">
-          <li className="mb-4">
-            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("home")}>
-              <FaHome /> <span>Home</span>
-            </button>
-          </li>
-          <li className="mb-4">
-            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("login")}>
-              <FaUser /> <span>Login</span>
-            </button>
-          </li>
-          <li className="mb-4">
-            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("user")}>
-              <FaUser /> <span>User Profile</span>
-            </button>
-          </li>
-          <li>
-            <button className="flex items-center space-x-2 text-white hover:text-gray-400 w-full p-2" onClick={() => setActiveComponent("athlete")}>
-              <FaRunning /> <span>Athlete Profile</span>
-            </button>
-          </li>
-        </ul>
-      </nav>
-      <div className="ml-64 p-6 w-full">
-        {activeComponent === "home" && <HomePage />}
-        {activeComponent === "login" && <LoginPage />}
-        {activeComponent === "user" && <UserProfile />}
-        {activeComponent === "athlete" && <AthleteProfile />}
+
+        {/* Mobile Dropdown Menu */}
+        {showMenu && (
+          <div className="md:hidden bg-gray-800 text-white p-4 space-y-3 absolute top-16 left-0 w-full z-20 shadow-lg">
+            {[
+              { label: "🏠 Home", key: "home" },
+              { label: "🔑 Login", key: "login" },
+              { label: "👤 User Profile", key: "user" },
+              { label: "🏃‍♂️ Athlete Profile", key: "athlete" },
+            ].map(({ label, key }) => (
+              <button
+                key={key}
+                className="w-full text-left hover:text-gray-400"
+                onClick={() => handleMenuClick(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div
+          className={`transition-all duration-300 p-4 w-full ${
+            showMenu ? "mt-60" : "mt-4"
+          } md:ml-64 md:w-[calc(100%-16rem)] flex justify-center`}
+        >
+          <div className="w-full max-w-4xl">
+            {activeComponent === "home" && <HomePage />}
+            {activeComponent === "login" && (
+              <div className="w-full max-w-3xl">
+                <LoginPage />
+              </div>
+            )}
+            {activeComponent === "user" && (
+              <div className="w-full max-w-3xl">
+                <UserProfile />
+              </div>
+            )}
+            {activeComponent === "athlete" && (
+              <div className="w-full max-w-4xl">
+                <AthleteProfile />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -57,54 +126,71 @@ export function HomePage() {
     {
       name: "Virat Kohli",
       sport: "Cricket",
-      story: "Virat Kohli's journey from a young aspiring cricketer to an international legend is a testament to hard work and perseverance. With a relentless drive for excellence, he has shattered records, led India to historic victories, and inspired a generation with his leadership and passion for the game.",
-      image: viratImage
+      story:
+        "Virat Kohli's journey from a young aspiring cricketer to an international legend is a testament to hard work and perseverance...",
+      image: viratImage,
     },
     {
       name: "Usain Bolt",
       sport: "Athletics",
-      story: "Usain Bolt, known as the fastest man on Earth, electrified the world with his incredible speed. His record-breaking performances in the 100m and 200m sprints cemented his legacy as a legend in track and field. His showmanship, dedication, and dominance redefined what it meant to be a sprinter.",
-      image: boltImage
+      story:
+        "Usain Bolt, known as the fastest man on Earth, electrified the world with his incredible speed...",
+      image: boltImage,
     },
     {
       name: "Serena Williams",
       sport: "Tennis",
-      story: "Serena Williams is not just a champion but a revolutionary force in women's tennis. With 23 Grand Slam singles titles, her strength, resilience, and mental fortitude have set new standards in the sport. Off the court, she has inspired millions through her advocacy for equality and empowerment.",
-      image: serenaImage
+      story:
+        "Serena Williams is not just a champion but a revolutionary force in women's tennis...",
+      image: serenaImage,
     },
     {
       name: "Lionel Messi",
       sport: "Football",
-      story: "Lionel Messi, a magician with the ball, has dazzled fans worldwide with his extraordinary dribbling and goal-scoring abilities. Overcoming early challenges, he rose to become a global icon, winning multiple Ballon d'Or awards and leading Argentina to World Cup glory. His humility and brilliance make him a true legend.",
-      image: messiImage
+      story:
+        "Lionel Messi, a magician with the ball, has dazzled fans worldwide with his extraordinary dribbling...",
+      image: messiImage,
     },
     {
       name: "Michael Phelps",
       sport: "Swimming",
-      story: "Michael Phelps' unparalleled dominance in swimming has made him the most decorated Olympian in history with 23 gold medals. His dedication, resilience, and commitment to excellence have redefined competitive swimming, leaving behind an inspiring legacy for future generations.",
-      image: phelpsImage
+      story:
+        "Michael Phelps' unparalleled dominance in swimming has made him the most decorated Olympian...",
+      image: phelpsImage,
     },
     {
       name: "Simone Biles",
       sport: "Gymnastics",
-      story: "Simone Biles has revolutionized gymnastics with her incredible power, precision, and fearless execution. Her groundbreaking skills and multiple Olympic gold medals have set a new benchmark in the sport. Beyond her athletic achievements, she is a strong advocate for mental health and athlete well-being.",
-      image: bilesImage
-    }
+      story:
+        "Simone Biles has revolutionized gymnastics with her incredible power, precision, and fearless execution...",
+      image: bilesImage,
+    },
   ];
 
   return (
-    <div className="max-w-6xl mx-auto mt-8 p-6">
+    <div className="max-w-6xl mx-auto mt-8 p-4 sm:p-6">
       {athletes.map((athlete, index) => (
-        <div key={index} className={`flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center bg-white shadow-lg rounded-lg p-8 mb-8 transition transform hover:scale-105 duration-300 ease-in-out w-full`}>
-          <img 
-            src={athlete.image} 
-            alt={athlete.name} 
-            className="w-48 h-48 object-cover rounded-lg shadow-md" 
+        <div
+          key={index}
+          className={`flex flex-col ${
+            index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+          } items-center bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 sm:p-8 mb-8 transition transform hover:scale-105 duration-300 ease-in-out w-full`}
+        >
+          <img
+            src={athlete.image}
+            alt={athlete.name}
+            className="w-full sm:w-64 h-64 object-cover rounded-lg shadow-md mb-4 md:mb-0"
           />
-          <div className="w-full p-6 space-y-1">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">{athlete.name}</h2>
-            <h3 className="text-xl font-semibold text-blue-600 mb-4">{athlete.sport}</h3>
-            <p className="text-gray-600 text-lg leading-relaxed mb-0 w-full">{athlete.story}</p>
+          <div className="w-full md:w-3/4 md:px-6 space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+              {athlete.name}
+            </h2>
+            <h3 className="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400">
+              {athlete.sport}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg leading-relaxed">
+              {athlete.story}
+            </p>
           </div>
         </div>
       ))}
